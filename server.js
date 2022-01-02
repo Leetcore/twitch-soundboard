@@ -39,10 +39,12 @@ fs.readdir("./public/files/", (err, files) => {
     }
 
     files.forEach(file => {
-        board.sound_strings.push({
-            command: "!" + file.toLocaleLowerCase().split(".")[0],
-            media: file.toLocaleLowerCase()
-        })
+        if (file.indexOf(".mp4") >= 0 || file.indexOf(".mp3") >= 0) {
+            board.sound_strings.push({
+                command: "!" + file.toLocaleLowerCase().split(".")[0],
+                media: file.toLocaleLowerCase()
+            })
+        }
     });
 });
 
