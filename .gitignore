@@ -1,0 +1,5 @@
+node_modules/
+public/files/*.mp3
+public/files/*.mp4
+package-lock.json
+.DS_Store

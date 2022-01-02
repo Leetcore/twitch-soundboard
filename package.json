@@ -1,0 +1,16 @@
+{
+  "name": "soundboard-for-twitch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "1337core",
+  "license": "MPL-2.0 License",
+  "dependencies": {
+    "express": "^4.17.2",
+    "tmi.js": "^1.8.5"
+  }
+}
