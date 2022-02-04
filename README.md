@@ -3,7 +3,7 @@ Dies ist ein einfaches Soundboard für Twitch.
 
 ## Setup
 ### Kanalname ändern
-Ändere den Kanalname in der Datei `server.js` (Zeile 7: `"change_this_channel_name"`)
+Ändere den Kanalname in der Datei `example.env` und benenne die Datei in `.env` um. Du kannst mehrere Kanäle hinzufügen, indem du sie mit Kommata trennst.
 
 ### NodeJS
 Du brauchst NodeJS (https://nodejs.org/en/) für dieses Projekt.
