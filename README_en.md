@@ -3,7 +3,7 @@ This is a simple soundboard for Twitch. German readme is here: README_de.md
 
 ## Setup
 ### Channel name
-Change channel name in the `server.js` file (line 7: `"change_this_channel_name"`)
+Change channel name in the `example.env` file and rename it to `.env`. You can specify multiple channels by separating them with a comma.
 
 ### NodeJS
 You need NodeJS (https://nodejs.org/en/) for this project.

@@ -1,9 +1,11 @@
+require("dotenv").config();
+
 const fs = require("fs");
 const tmi = require("tmi.js");
 
 // Define configuration options
 const opts = {
-    channels: ["change_this_channel_name"]
+    channels: process.env.CHANNELS.split(",").map(s => s.trim())
 };
 
 let board = {
@@ -23,7 +25,7 @@ console.log(`
 ### ### ###   # ### ### #   ###   
 
 Starting 1337core.de Hacker Soundboard!
-* Change channel name in this (server.js) file (line 7: "change_this_channel_name")
+* Change channel name in the example.env file and rename it to .env
 * Insert browser window with URL: http://localhost:${port} to OBS
 * Upload your *.mp4 and *.mp3s to /pulic/files/*
 * Files will be shown with "!filename" in twitch chat
@@ -70,7 +72,7 @@ function onMessageHandler (target, context, msg, self) {
 
     // Remove whitespace from chat message
     const message = msg.trim();
-    if (message.indexOf("!") === 0) {
+    if (message.startsWith("!")) {
         runCommand(message);
     }
 }
