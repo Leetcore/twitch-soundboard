@@ -1,5 +1,13 @@
+# NPM
 node_modules/
+package-lock.json
+
+# Project specific
 public/files/*.mp3
 public/files/*.mp4
-package-lock.json
+
+# Environment
+.env
+
+# Misc
 .DS_Store
