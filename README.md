@@ -15,21 +15,30 @@ npm start
 ```
 
 ### OBS
-Füge ein Browserfenster in OBS hinzu und wähle die URL: http://localhost:3000.
-Wenn du eine neue Datei zu deinem Soundboard hinzugefügt hast, musst du es danach neustarten
-und es in OBS auswählen und "aktualisieren" klicken.
+Füge ein Browserfenster in OBS hinzu und wähle die URL: http://localhost:3003.
+Wenn du eine neue Datei zu deinem Soundboard hinzugefügt hast, musst du es 
+danach neustarten und es in OBS auswählen und "aktualisieren" klicken.
 
 ## Sounds und Videos hochladen in /public/files/
-Speichere deine Sound oder Videodatein in "/public/files/". Der Befehl im Chat wird genauso heißen,
+Speichere deine Sound oder Videodatein in "/public/files/". Der Befehl im Chat 
+wird genauso heißen,
 wie deine Datei. Allerdings muss `!` vorher geschrieben werden.
 
-Die Chatnachricht "!lala" spielt die Datei "lala.mp3" oder "lala.mp4" im OBS Browserfenster ab.
+Die Chatnachricht "!lala" spielt die Datei "lala.mp3" oder "lala.mp4" im OBS 
+Browserfenster ab.
 
 ```
 !lala -> lala.mp3
 ```
 
-Du kannst *.mp3 oder *.mp4 Dateien benutzen, die in einem OBS Browserfenster abgespielt werden können.
+Du kannst *.mp3 oder *.mp4 Dateien benutzen, die in einem OBS Browserfenster 
+abgespielt werden können.
+
+## Text to speech
+TTS wird komplett vom Browser übernommen. Welche Stimme spricht, hängt also
+von deinem Betriebssystem ab. Wenn eine Nachricht in den Chat geschrieben wird, 
+spielt der Browser `/public/files/icq.mp3` ab.
 
 ## Zeige alle Befehle an:
-`!help`, `!hilfe`, `!soundboard`, `!commands` zeigt ein Hilfefenster mit allen möglichen Befehlen an.
+`!help`, `!hilfe`, `!soundboard`, `!commands` zeigt ein Hilfefenster mit allen 
+möglichen Befehlen an.

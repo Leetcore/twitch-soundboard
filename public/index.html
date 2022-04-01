@@ -16,7 +16,6 @@
             padding: 0;
             font-weight: bold;
             font-family: monospace;
-            font-size: 80%;
         }
 
         .help {
@@ -46,6 +45,7 @@
 <body>
     <video id="video"></video>
     <audio id="audio"></audio>
+    <audio id="notification"></audio>
     <div class="help">
         <h1>Soundboard Hilfe</h1>
         <p>
@@ -53,8 +53,16 @@
         </p>
         <p id="command_list"></p>
     </div>
+    <div class="stats">
+        <h1>Nutzungsstatistik</h1>
+        <p>
+            !stats - Zeigt diese Statistik an
+        </p>
+        <p id="stats"></p>
+    </div>
     <script>
         var sound_strings = []
+        var stats = []
 
         // insert video/audio element tags
         var video = document.querySelector("#video");
@@ -70,12 +78,20 @@
         audio.addEventListener("loadeddata", function () {
             audio.play();
         });
+        
+        var notification = document.querySelector("#notification");
+        notification.volume = 0.5;
+        notification.addEventListener("loadeddata", function () {
+            notification.play();
+        });
 
         function messageUpdate() {
-            fetch('http://localhost:3000/board')
+            fetch('http://localhost:3003/board')
                 .then(response => response.json())
                 .then(response => {
-                    let messages = response.commands;
+                    let commands = response.commands;
+                    let messages = response.messages;
+                    let notifications = response.notifications;
                     sound_strings = response.sound_strings;
                     
                     // print command list
@@ -85,14 +101,36 @@
 
                     // clean messages with trim
                     messages = messages.map(message => message.trim());
+                    commands = commands.map(commands => commands.trim());
+
+                    // play notification sound if sound is there
+                    // TODO: notification sound is hardcoded
+                    if (notifications.length > 0 && sound_strings.indexOf("icq.mp3")) {
+                        document.querySelector("#notification").src = "/files/icq.mp3";
+                    }
+
+                    // read message with TTS
+                    if (messages.length > 0 && messages.length < 100) {
+                        for (var i = 0; i < messages.length; i++) {
+                            let message = messages[i];
+                            // speech text
+                            var speak = new SpeechSynthesisUtterance(
+                                message
+                            );
+                            speak.rate = 1.1;
+                            speak.lang = "de-DE";
+                            speak.volume = 0.5;
+                            speechSynthesis.speak(speak);
+                        }
+                    }
 
                     // play sound
-                    if (messages.length > 0) {
-                        let message = messages[0];
+                    if (commands.length > 0) {
+                        let command = commands[0];
                         // create video/audio element
                         sound_strings.forEach(object => {
-                            // Split message on whitespace (by words), if first word is equal to command
-                            if (message.split(/\s+/)[0] == object.command) {
+                            // split command on whitespace (by words), if first word is equal to command
+                            if (command.split(/\s+/)[0] == object.command) {
                                 if (object.media.indexOf("mp4") >= 0) {
                                     document.querySelector("#video").src = "./files/" + object.media;
                                 }
@@ -102,9 +140,10 @@
                             }
                         });
                     }
+
                     // show help
-                    messages.forEach(message => {
-                        if (message == "!help" || message == "!hilfe" || message == "!soundboard" || message == "!commands") {
+                    commands.forEach(command => {
+                        if (command == "!help" || command == "!hilfe" || command == "!soundboard" || command == "!commands") {
                             document.querySelector(".help").style.display = "block";
                             setTimeout(() => {
                                 document.querySelector(".help").style.bottom = "0px";

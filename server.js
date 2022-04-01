@@ -5,17 +5,20 @@ const tmi = require("tmi.js");
 
 // Define configuration options
 const opts = {
-    channels: process.env.CHANNELS.split(",").map(s => s.trim())
+    channels: process.env.CHANNELS.split(",").map(s => s.trim()),
+    speakers: process.env.SPEAKERS.split(",").map(s => s.trim().toLowerCase())
 };
 
 let board = {
     commands: [],
+    messages: [],
+    notifications: [],
     sound_strings: []
 }
 
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 3003;
 
 console.log(`
 #  ### ### ###                 
@@ -24,7 +27,7 @@ console.log(`
  #    #   #   # #   # # #   ##  
 ### ### ###   # ### ### #   ###   
 
-Starting 1337core.de Hacker Soundboard!
+Starting Twitch Soundboard!
 * Change channel name in the example.env file and rename it to .env
 * Insert browser window with URL: http://localhost:${port} to OBS
 * Upload your *.mp4 and *.mp3s to /pulic/files/*
@@ -32,7 +35,7 @@ Starting 1337core.de Hacker Soundboard!
 
 `);
 
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 // Build a soundstrings to pass to your frontend
 fs.readdir("./public/files/", (err, files) => {
@@ -45,7 +48,7 @@ fs.readdir("./public/files/", (err, files) => {
             board.sound_strings.push({
                 command: "!" + file.toLocaleLowerCase().split(".")[0],
                 media: file.toLocaleLowerCase()
-            })
+            });
         }
     });
 });
@@ -54,6 +57,8 @@ fs.readdir("./public/files/", (err, files) => {
 app.get('/board', (req, res) => {
     res.send(JSON.stringify(board));
     board.commands = [];
+    board.messages = [];
+    board.notifications = [];
 });
 
 // Create a twitch client with our options
@@ -71,16 +76,20 @@ function onMessageHandler (target, context, msg, self) {
     if (self) { return; } // Ignore messages from the bot
 
     // Remove whitespace from chat message
-    const message = msg.trim();
-    if (message.startsWith("!")) {
-        runCommand(message);
+    const twitch_message = msg.trim();
+    // read commands with !
+    if (twitch_message.indexOf("!") === 0) {
+        board.commands.push(twitch_message.toLowerCase());
+    } else {
+        // read messages without !
+        board.notifications.push(twitch_message.toLowerCase());
+        // read message with TTS
+        if (opts.speakers.indexOf(context.username.toLowerCase()) >= 0) {
+            board.messages.push(twitch_message.toLowerCase());
+        } else if (context.subscriber === true) {
+            board.messages.push(twitch_message.toLowerCase());
+        }
     }
-}
-
-// Push all commands to your board object
-// board object will be passed to the frontend
-function runCommand(command) {
-    board.commands.push(command.toLowerCase());
 }
 
 // Called every time the bot connects to Twitch chat
