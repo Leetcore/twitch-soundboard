@@ -29,6 +29,21 @@ Mapping in Twitch chat. "!lala" will play "lala.mp3" or "lala.mp4" in the browse
 
 You can use *.mp3 or *.mp4 files that are playable in a OBS browser window.
 
+## Text to speech
+TTS is completely done by the browser. Which voice speaks, therefore, depends
+depends on your operating system. When a message is written to the chat 
+the soundboards plays `/public/files/icq.mp3`. (Yes, currently hardcoded.)
+
+## Webhook
+It is possible to configure a webhook in ".env". When starting the 
+soundboard you will be asked if this webhook should be sent with the webhook 
+text should be sent.
+
+```env
+WEBHOOK=url
+WEBHOOK_CONTENT=text
+```
+
 ## Show all commands:
 Type these commands in the twitch chat to trigger the help window that shows all commands!
 `!help`, `!hilfe`, `!soundboard`, `!commands`

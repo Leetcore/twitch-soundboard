@@ -1,12 +1,20 @@
 require("dotenv").config();
 
+const axios = require('axios');
+const readline = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
+
 const fs = require("fs");
 const tmi = require("tmi.js");
 
 // Define configuration options
 const opts = {
     channels: process.env.CHANNELS.split(",").map(s => s.trim()),
-    speakers: process.env.SPEAKERS.split(",").map(s => s.trim().toLowerCase())
+    speakers: process.env.SPEAKERS.split(",").map(s => s.trim().toLowerCase()),
+    webhook: process.env.WEBHOOK,
+    webhook_content: process.env.WEBHOOK_CONTENT
 };
 
 let board = {
@@ -34,6 +42,19 @@ Starting Twitch Soundboard!
 * Files will be shown with "!filename" in twitch chat
 
 `);
+
+if (opts.webhook) {
+    readline.question(`Do you want to trigger your configured webhook? (y/yes)\n`, result => {
+        if (result === "yes" || result === "y") {
+            // trigger webhook
+            axios.post(opts.webhook, {
+                content: opts.webhook_content
+            })
+                .catch(err => console.warn(err));
+        }
+        readline.close();
+    });
+}
 
 app.use(express.static("public"));
 
@@ -72,7 +93,7 @@ client.on("connected", onConnectedHandler);
 client.connect();
 
 // Called every time a message comes in
-function onMessageHandler (target, context, msg, self) {
+function onMessageHandler(target, context, msg, self) {
     if (self) { return; } // Ignore messages from the bot
 
     // Remove whitespace from chat message
@@ -93,7 +114,7 @@ function onMessageHandler (target, context, msg, self) {
 }
 
 // Called every time the bot connects to Twitch chat
-function onConnectedHandler (addr, port) {
+function onConnectedHandler(addr, port) {
     console.log(`* Connected to twitch chat on ${addr}:${port}`);
 }
 

@@ -39,6 +39,16 @@ TTS wird komplett vom Browser übernommen. Welche Stimme spricht, hängt also
 von deinem Betriebssystem ab. Wenn eine Nachricht in den Chat geschrieben wird, 
 spielt der Browser `/public/files/icq.mp3` ab.
 
+## Webhook
+Es ist möglich einen Webhook in ".env" zu konfigurieren. Beim Start des 
+Soundboards wird gefragt, ob dieser Webhook mit dem Webhook Text gesendet 
+werden soll.
+
+```env
+WEBHOOK=url
+WEBHOOK_CONTENT=text
+```
+
 ## Zeige alle Befehle an:
 `!help`, `!hilfe`, `!soundboard`, `!commands` zeigt ein Hilfefenster mit allen 
 möglichen Befehlen an.
