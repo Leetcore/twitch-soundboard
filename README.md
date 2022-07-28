@@ -13,6 +13,9 @@ Installiere die Pakete in der Kommandozeile mit:
 npm install
 npm start
 ```
+Optional:
+Kopiere die `example.env` und benenne sie in `.env` um. Dort wird TTS und dein 
+Webhook konfiguriert.
 
 ### OBS
 Füge ein Browserfenster in OBS hinzu und wähle die URL: http://localhost:3003.

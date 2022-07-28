@@ -14,6 +14,10 @@ npm install
 npm start
 ```
 
+Optional:
+Copy `example.env` file and rename the file to `.env`. You can configure TTS
+and your webhook there.
+
 ### OBS
 Insert a browser window to your OBs scene and point the URL to: http://localhost:3000.
 If you change the files or the code you have to click "reload" in the settings of this
