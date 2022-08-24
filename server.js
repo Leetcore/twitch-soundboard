@@ -49,8 +49,9 @@ if (opts.webhook) {
             // trigger webhook
             axios.post(opts.webhook, {
                 content: opts.webhook_content
-            })
-                .catch(err => console.warn(err));
+            }).then(() => {
+                console.log(`Webhook triggered!`);
+            }).catch(err => console.warn(err));
         }
         readline.close();
     });
