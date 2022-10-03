@@ -104,7 +104,8 @@
 
                     // read message with TTS
                     if (messages.length > 0 && messages.length < 100) {
-                        for (var i = 0; i < messages.length; i++) {
+                        setTimeout(() => {
+                            for (var i = 0; i < messages.length; i++) {
                             let message = messages[i];
                             // speech text
                             var speak = new SpeechSynthesisUtterance(
@@ -115,6 +116,7 @@
                             speak.volume = 0.5;
                             speechSynthesis.speak(speak);
                         }
+                        }, 300)
                     }
 
                     // play sound
