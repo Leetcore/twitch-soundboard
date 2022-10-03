@@ -99,13 +99,23 @@ function onMessageHandler(target, context, msg, self) {
 
     // Remove whitespace from chat message
     const twitch_message = msg.trim();
+
+    // if message is mentioning someone else, dont read it
+    for (let channel of opts.channels) {
+        if (twitch_message.indexOf("@") == 0
+            && twitch_message.indexOf("@" + channel) == -1) {
+            return;
+        }
+    }
+
     // read commands with !
     if (twitch_message.indexOf("!") === 0) {
         board.commands.push(twitch_message.toLowerCase());
     } else {
         // read messages without !
         board.notifications.push(twitch_message.toLowerCase());
-        // read message with TTS
+
+        // read message with TTS if in speakers or subscriber
         if (opts.speakers.indexOf(context.username.toLowerCase()) >= 0) {
             board.messages.push(twitch_message.toLowerCase());
         } else if (context.subscriber === true) {
