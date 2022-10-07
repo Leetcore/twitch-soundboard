@@ -12,6 +12,7 @@ const tmi = require("tmi.js");
 // Define configuration options
 const opts = {
     channels: process.env.CHANNELS.split(",").map(s => s.trim()),
+    admins: process.env.ADMINS.split(",").map(s => s.trim().toLowerCase()),
     speakers: process.env.SPEAKERS.split(",").map(s => s.trim().toLowerCase()),
     webhook: process.env.WEBHOOK,
     webhook_content: process.env.WEBHOOK_CONTENT
@@ -21,7 +22,9 @@ let board = {
     commands: [],
     messages: [],
     notifications: [],
-    sound_strings: []
+    sound_strings: [],
+    message_sound: true,
+    tts: true
 }
 
 const express = require("express");
@@ -108,18 +111,53 @@ function onMessageHandler(target, context, msg, self) {
         }
     }
 
+    // admin commands
+    if (opts.admins.includes(context.username)) {
+        switch (twitch_message.toLowerCase()) {
+            case "!soundoff":
+                board.message_sound = false
+                break;
+            case "!soundon":
+                board.message_sound = true
+            case "!ttsoff":
+                board.tts = false
+                break;
+            case "!ttson":
+                board.tts = true
+                break;
+            case "!mute":
+                board.mute = true
+                break;
+            case "!unmute":
+                board.mute = false
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    // mute all sound
+    if (board.mute) {
+        return;
+    }
+
     // read commands with !
     if (twitch_message.indexOf("!") === 0) {
         board.commands.push(twitch_message.toLowerCase());
     } else {
         // read messages without !
-        board.notifications.push(twitch_message.toLowerCase());
+        if (board.message_sound) {
+            board.notifications.push(twitch_message.toLowerCase());
+        }
 
         // read message with TTS if in speakers or subscriber
-        if (opts.speakers.indexOf(context.username.toLowerCase()) >= 0) {
-            board.messages.push(twitch_message.toLowerCase());
-        } else if (context.subscriber === true) {
-            board.messages.push(twitch_message.toLowerCase());
+        if (board.tts) {
+            if (opts.speakers.indexOf(context.username.toLowerCase()) >= 0) {
+                board.messages.push(twitch_message.toLowerCase());
+            } else if (context.subscriber === true) {
+                board.messages.push(twitch_message.toLowerCase());
+            }
         }
     }
 }
